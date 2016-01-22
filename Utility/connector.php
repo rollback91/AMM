@@ -8,26 +8,28 @@
 
 class Connector {
 
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "davide";
-    private $conn;
+    private static $servername = "localhost";
+    private static $username = "root";
+    private static $password = "davide";
+    private static $dbname = "todo_db";
+    private static $conn;
+    
     private static function initialize() {
         // Create connection
-        $conn = new mysqli($this->$servername, $this->$username, $this->$password);
+        self::$conn = new mysqli(self::$servername, self::$username, self::$password, self::$dbname);
 
         // Check connection
-        if ($conn->connect_error) {
+        if (self::$conn->connect_error) {
             return -1;
         }
         return 0;
     }
 
-    static function query($query, $elements) {
+    static function queryIO($query, $elements) {
         $check = self::initialize();
         $params = array();
         if ($check >= 0) {
-            $stmt = $conn->prepare($query);
+            $stmt = self::$conn->prepare($query);
             
             //$elements is an array of arrays that includes [<type>,<value>]
             foreach($elements as $e){
@@ -41,12 +43,34 @@ class Connector {
             }
             return $a_data;
         }
-        self::close();
+        self::$conn->close();
         die("Connection Error");
     }
     
-    private static function close(){
-        $conn.close();
+    static function query($query){
+$ret = [];
+        $check = self::initialize();
+        if ($check >= 0) {
+            $res = self::$conn->query($query);
+            //echo $res;
+            //echo "</br> stringa query";
+            //echo self::$conn->affected_rows;
+            if(isset($res->row_num)){
+                while($row = $res->fetch_array(MYSQLI_ASSOC)) {
+                    array_push($ret, $row);
+                  //$ret[] = $row;
+                }
+                print_r($ret);
+                $res->free();
+            }
+            
+            
+        }else{
+            $ret = "Connection Error";
+        }
+        
+        self::$conn->close();
+        return isset($ret) ? $ret : NULL; 
     }
 
 }

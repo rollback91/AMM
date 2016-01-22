@@ -5,5 +5,6 @@ $password = filter_input(INPUT_GET, 'password');
 
 
 $test = new User($user, $password);
-
-echo $test->getUser() . $test->getPass() .'';
+$hash = $test->login();
+//echo $hash;
+//echo $test->getUser() . $test->getPass() .'';

@@ -4,7 +4,7 @@ include_once 'Utility/connector.php';
 foreach (glob("Model/*.php") as $filename){
     include_once $filename;
 }
-
+//print_r($_SERVER);
 $controller_path = 'REST_Controller/';
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 //$scheme = $_REQUEST['REQUEST_SCHEME'];
