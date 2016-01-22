@@ -15,7 +15,7 @@ class Connector {
     private static $conn;
     
     private static function initialize() {
-        // Create connection
+        // Create connectio
         self::$conn = new mysqli(self::$servername, self::$username, self::$password, self::$dbname);
 
         // Check connection
