@@ -48,23 +48,29 @@ class Connector {
     }
     
     static function query($query){
-$ret = [];
+        $ret = [];
         $check = self::initialize();
         if ($check >= 0) {
             $res = self::$conn->query($query);
+//            log($query);
             //echo $res;
             //echo "</br> stringa query";
             //echo self::$conn->affected_rows;
-            if(isset($res->row_num)){
+            
+            
+            //echo $res->toString();
+           if($res !== true){
                 while($row = $res->fetch_array(MYSQLI_ASSOC)) {
                     array_push($ret, $row);
                   //$ret[] = $row;
                 }
-                print_r($ret);
+                //print_r($ret);
                 $res->free();
+            }else{
+                $ret = true;
             }
             
-            
+        //echo "test";
         }else{
             $ret = "Connection Error";
         }

@@ -14,15 +14,16 @@ $time = $_SERVER['REQUEST_TIME'];
 //CREO IL GESTORE DEGLI URL
 // /?method="login"
 $URL = array(
-       array('login','GET','doLogin'), 
-       array('logout', 'POST', 'doLogout'),
+       array('login','doLogin'), 
+       array('logout', 'doLogout'),
        array ('','','')
 );
-echo $requestMethod . $method;
+header('Content-Type: application/json');
+//echo $requestMethod . $method;
 //CONTROLLO CHE L'URL SIA ESISTENTE ALTRIMENTI LANCIO 404
-foreach ($URL as list($url, $meth, $func)){
-    if($method == $url && $requestMethod == $meth){
-        echo $controller_path.$func .'.php';
+foreach ($URL as list($url, $func)){
+    if($method == $url){
+        //echo $controller_path.$func .'.php';
         include_once $controller_path . $func . '.php';
         
     }

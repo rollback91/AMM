@@ -25,18 +25,19 @@ class User {
     public static function save(){}
     public function login(){
         $a =  "SELECT * FROM users WHERE email = '".$this->user."'";
-        echo"\n".$a;
+        //echo"</br>".$a;
         $res = Connector::query($a);
         if(isset($res)){
-            //echo "found";
+            //echo "</br>found";
+            //print_r($res);
             foreach($res as $r){
-                //echo "found1";
+                //echo "</br>found1";
                 if(in_array($this->user, $r, false) && in_array($this->password, $r, false)){
-//                    echo "found2";
-                    $this->hash = mhash(MHASH_MD5, $_SERVER['HTTP_USER_AGENT']. $this->password);
-                   // print_r($r);
-                    echo Connector::query("UPDATE users SET logged = '".$hash."' WHERE id = ".$r['id']);
-//                    echo $hash;
+                   // echo "</br>found2";
+                    $this->hash = hash_hmac('ripemd160', $_SERVER['HTTP_USER_AGENT'].$_SERVER['REQUEST_URI'], $this->password);
+                    //print_r($r);
+                    Connector::query("UPDATE users SET logged = '".$this->hash."' WHERE id = ".$r['id']);
+                    //echo $this->hash;
 
                     return $this->hash;
                 }else{
@@ -44,8 +45,13 @@ class User {
                 }
             }
         }
+        return "nothing";
     }
-    public static function logout(){}
+    public static function logout($key){
+        $res = Connector::query("UPDATE users SET logged = NULL where logged ='".$key."'");
+        //echo var_dump($res);
+        return $res === true ? "true" : "false";
+    }
     
 
 }
