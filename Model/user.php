@@ -34,7 +34,7 @@ class User {
                 //echo "</br>found1";
                 if(in_array($this->user, $r, false) && in_array($this->password, $r, false)){
                    // echo "</br>found2";
-                    $this->hash = hash_hmac('ripemd160', $_SERVER['HTTP_USER_AGENT'].$_SERVER['REQUEST_URI'], $this->password);
+                    $this->hash = hash_hmac('ripemd160', $_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'], $this->password);
                     //print_r($r);
                     Connector::query("UPDATE users SET logged = '".$this->hash."' WHERE id = ".$r['id']);
                     //echo $this->hash;

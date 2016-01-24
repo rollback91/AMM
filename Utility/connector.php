@@ -52,12 +52,10 @@ class Connector {
         $check = self::initialize();
         if ($check >= 0) {
             $res = self::$conn->query($query);
-//            log($query);
+            //log($query);
             //echo $res;
             //echo "</br> stringa query";
             //echo self::$conn->affected_rows;
-            
-            
             //echo $res->toString();
            if($res !== true){
                 while($row = $res->fetch_array(MYSQLI_ASSOC)) {
@@ -78,5 +76,37 @@ class Connector {
         self::$conn->close();
         return isset($ret) ? $ret : NULL; 
     }
+    
+    static function queryTran($query){
+        $ret = [];
+        $flag = true;
+        $check = self::initialize();
+        self::$conn->autocommit(false);
+        if ($check >= 0) {
+            //print_r($query);
+            foreach($query as $q){
+                //print_r($q);
+                $res = self::$conn->query($q);
+                //echo self::$conn->error;
+                if(self::$conn->error){
+                    $flag = false;
+                    //echo "ERRORE".$q;
+                    array_push($ret,"Errore query: ".$q);
+                }
+            }
+            //echo $flag;
+            if($flag){
+                self::$conn->commit();
+            }else{
+                self::$conn->rollback();
+            }
+            //$res->free(); 
 
+        }else{
+            $ret = "Connection Error";
+        }
+        
+        self::$conn->close();
+        return isset($ret) ? $ret : NULL; 
+    }
 }

@@ -1,6 +1,9 @@
 <?php
 // include as if there was no tomorrow!!
-include_once 'Utility/connector.php';
+foreach (glob("Utility/*.php") as $filename){
+    include_once $filename;
+}
+//include_once 'Utility/connector.php';
 foreach (glob("Model/*.php") as $filename){
     include_once $filename;
 }
@@ -16,7 +19,7 @@ $time = $_SERVER['REQUEST_TIME'];
 $URL = array(
        array('login','doLogin'), 
        array('logout', 'doLogout'),
-       array ('','','')
+       array ('createproject','createProject')
 );
 header('Content-Type: application/json');
 //echo $requestMethod . $method;
